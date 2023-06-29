@@ -63,8 +63,8 @@ public class ItemStackMixin extends CapabilityProvider<ItemStack> {
                         create(new TranslatableContents(EquipmentBenediction.MOD_ID +".quality.desc"))
                         .append(": ")
                         .append(MutableComponent
-                                .create(new TranslatableContents(EquipmentBenediction.MOD_ID +".quality." + qualityData.id()))
-                                .withStyle(ChatFormatting.valueOf(qualityData.color().toUpperCase()))
+                                .create(new TranslatableContents(EquipmentBenediction.MOD_ID +".quality." + qualityData.getId()))
+                                .withStyle(ChatFormatting.valueOf(qualityData.getColor().toUpperCase()))
                         ));
             }
         });

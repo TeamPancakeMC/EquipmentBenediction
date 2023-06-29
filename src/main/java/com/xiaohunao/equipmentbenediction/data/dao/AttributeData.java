@@ -10,7 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record AttributeData(String type, Modifier modifier, List<String> slots) {
+public class AttributeData {
+    private final String type;
+    private final Modifier modifier;
+    private final List<String> slots;
+
+    public AttributeData(String type, Modifier modifier, List<String> slots) {
+        this.type = type;
+        this.modifier = modifier;
+        this.slots = slots;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Modifier getModifier() {
+        return modifier;
+    }
+
+    public List<String> getSlots() {
+        return slots;
+    }
 
     public Map<Attribute, AttributeModifier> getAttributeMap() {
         HashMap<Attribute, AttributeModifier> map = new HashMap<>();

@@ -6,7 +6,22 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public record RecastingRequirement(int count, List<ItemVerifier> verifiers) {
+public class RecastingRequirement {
+    private final int count;
+    private final List<ItemVerifier> verifiers;
+
+    public RecastingRequirement(int count, List<ItemVerifier> verifiers) {
+        this.count = count;
+        this.verifiers = verifiers;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public List<ItemVerifier> getVerifiers() {
+        return verifiers;
+    }
 
     public boolean isCompleteValid(ItemStack stack) {
         int count = stack.getCount();

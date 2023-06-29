@@ -56,8 +56,8 @@ public class GlossaryDataLoader extends SimpleJsonResourceReloadListener {
             String id = qualityCap.getId();
             QualityData qualityData = EquipmentBenediction.QUALITY_DATA.get(id);
 
-            int count = qualityData.count();
-            int level = qualityData.level();
+            int count = qualityData.getCount();
+            int level = qualityData.getLevel();
 
             for (int i = 0; i < count; i++) {
                 glossaryDataList.add(getRandomGlossaryData());
@@ -96,7 +96,7 @@ public class GlossaryDataLoader extends SimpleJsonResourceReloadListener {
             List<AttributeData> attributeDataList = glossaryData.getAttribute();
             boolean isDuplicate = false;
             for (AttributeData attributeData : attributeDataList) {
-                String type = attributeData.type();
+                String type = attributeData.getType();
                 if (set.contains(type)) {
                     isDuplicate = true;
                     break;

@@ -25,7 +25,7 @@ public class ItemMixin {
             if (qualityCap.isHasQuality()) return;
             QualityData data = EquipmentBenediction.QUALITY_DATA.getRandomEquipmentQualityData();
             qualityCap.setHasQuality(true);
-            qualityCap.setId(data.id());
+            qualityCap.setId(data.getId());
         });
 
         List<GlossaryData> filteredGlossary = EquipmentBenediction.GLOSSARY_DATA.getFilteredGlossary(stack);

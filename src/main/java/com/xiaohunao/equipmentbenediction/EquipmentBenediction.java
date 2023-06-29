@@ -44,7 +44,7 @@ public class EquipmentBenediction {
         onRegisterEvent();
     }
 
-    public static final CreativeModeTab EQUIPMENT_QUALITY_TAB = new CreativeModeTab("equipmentquality") {
+    public static final CreativeModeTab EQUIPMENT_QUALITY_TAB = new CreativeModeTab(MOD_ID) {
         @Override
         public @NotNull ItemStack makeIcon() {
             return new ItemStack(BlockRegistry.RECASTING_DESK.get());

@@ -34,7 +34,7 @@ public class QualityDataLoader extends SimpleJsonResourceReloadListener {
         for (Map.Entry<ResourceLocation, JsonElement> entry : loader.entrySet()) {
             try {
                 QualityData qualityData = GSON.fromJson(entry.getValue(), QualityData.class);
-                qualityDataHashMap.put(qualityData.id(), qualityData);
+                qualityDataHashMap.put(qualityData.getId(), qualityData);
             } catch (IllegalArgumentException | JsonParseException exception) {
                 throw new JsonParseException("解析品质Json数据包错误" + entry.getKey(), exception);
             }
@@ -63,12 +63,12 @@ public class QualityDataLoader extends SimpleJsonResourceReloadListener {
         if (qualityDataHashMap == null) return null;
         double probabilitySum = 0.0;
         for (QualityData equipment : qualityDataHashMap.values()) {
-            probabilitySum += equipment.chance();
+            probabilitySum += equipment.getChance();
         }
         double random = Math.random() * probabilitySum;
         double sum = 0.0;
         for (Map.Entry<String, QualityData> entry : qualityDataHashMap.entrySet()) {
-            sum += entry.getValue().chance();
+            sum += entry.getValue().getChance();
             if (random < sum) {
                 return entry.getValue();
             }
