@@ -1,5 +1,7 @@
 package com.xiaohunao.equipmentbenediction.mixin;
 
+
+
 import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
 import com.xiaohunao.equipmentbenediction.data.dao.GlossaryData;
 import com.xiaohunao.equipmentbenediction.data.dao.QualityData;
@@ -32,7 +34,9 @@ public class ItemMixin {
         stack.getCapability(CapabilityRegistry.GLOSSARY).ifPresent(glossaryCap -> {
             if (glossaryCap.isHasGlossary()) return;
             glossaryCap.setHasGlossary(true);
-            filteredGlossary.forEach(glossaryData -> glossaryCap.addGlossaryID(glossaryData.getId()));
+            filteredGlossary.forEach(glossaryData -> {
+                glossaryCap.addGlossaryID(glossaryData.getId());
+            });
         });
     }
 }

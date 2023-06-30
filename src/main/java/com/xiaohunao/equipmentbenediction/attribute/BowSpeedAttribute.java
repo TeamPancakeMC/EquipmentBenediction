@@ -1,6 +1,5 @@
 package com.xiaohunao.equipmentbenediction.attribute;
 
-import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
 import com.xiaohunao.equipmentbenediction.registry.AttributesRegister;
 import com.xiaohunao.equipmentbenediction.util.AttributeUtil;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class BowSpeedAttribute extends BaseAttribute{
-    public static final String NAME = "attribute." + EquipmentBenediction.MOD_ID + ".bow_speed";
+    public static final String NAME = "generic.bow_speed";
     public BowSpeedAttribute() {
         super(NAME);
     }
@@ -21,8 +20,8 @@ public class BowSpeedAttribute extends BaseAttribute{
     public static void onLivingEntityUseItem(LivingEntityUseItemEvent.Start event) {
         ItemStack stack = event.getItem();
         if (stack.getItem() instanceof BowItem) {
-            LivingEntity entityLiving = event.getEntity();
-            float attributeValue = AttributeUtil.getAttributeValue(entityLiving, AttributesRegister.BOW_SPEED.get());
+            LivingEntity entityLiving = event.getEntityLiving();
+            float attributeValue = AttributeUtil.getAttributeValue(entityLiving, AttributesRegister.BOW_SPEED);
             int duration = event.getDuration();
             duration -= attributeValue * duration;
             event.setDuration(duration);

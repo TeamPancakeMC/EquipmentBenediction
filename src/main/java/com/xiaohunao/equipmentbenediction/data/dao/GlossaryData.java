@@ -2,7 +2,6 @@ package com.xiaohunao.equipmentbenediction.data.dao;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class GlossaryData {
         return attributes;
     }
     public boolean isValid(ItemStack stack) {
-        return isValid(ForgeRegistries.ITEMS.getKey(stack.getItem()));
+        return isValid(stack.getItem().getRegistryName());
     }
 
     public boolean isValid(ResourceLocation id) {

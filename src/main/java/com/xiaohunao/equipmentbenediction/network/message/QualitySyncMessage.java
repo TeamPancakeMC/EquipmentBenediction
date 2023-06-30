@@ -8,7 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -39,7 +39,7 @@ public class QualitySyncMessage {
         if (sender == null) return;
         AbstractContainerMenu containerMenu = context.getSender().containerMenu;
         if (containerMenu instanceof RecastingDeskContainerMenu menu) {
-            menu.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(cap -> {
+            menu.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(cap -> {
                 ItemStack stack = cap.getStackInSlot(0);
                 stack.getCapability(CapabilityRegistry.QUALITY).ifPresent(quality -> {
                     boolean recasting = EquipmentBenediction.QUALITY_DATA.get(quality.getId()).Recasting(cap.getStackInSlot(1));

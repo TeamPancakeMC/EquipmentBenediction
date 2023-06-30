@@ -30,10 +30,15 @@ public abstract class BaseEffectAttribute extends BaseAttribute {
 
     public void onLivingAttack(LivingAttackEvent event) {
         Entity entity = event.getSource().getEntity();
-        if (entity == null ||
-                entity.level.isClientSide ||
-                !(entity instanceof LivingEntity living) ||
-                new Random().nextFloat() > AttributeUtil.getAttributeValue(living, getAttribute())) return;
-        event.getEntity().addEffect(new MobEffectInstance(getMobEffect(), getDuration(), getLevel()));
+        if (entity == null) return;
+        if (entity.level.isClientSide) return;
+
+        if (entity instanceof LivingEntity living) {
+            float attributeValue = AttributeUtil.getAttributeValue(living, getAttribute());
+            if (new Random().nextFloat() <= attributeValue) {
+                LivingEntity entityLiving = event.getEntityLiving();
+                entityLiving.addEffect(new MobEffectInstance(getMobEffect(), getDuration(), getLevel()));
+            }
+        }
     }
 }

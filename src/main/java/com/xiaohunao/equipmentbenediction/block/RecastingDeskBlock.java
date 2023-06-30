@@ -27,11 +27,11 @@ public class RecastingDeskBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult blockHitResult) {
+    public InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult blockHitResult) {
         if (!level.isClientSide()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof RecastingDeskBlockEntity blockEntity && player instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openScreen(serverPlayer, blockEntity, pos);
+                NetworkHooks.openGui(serverPlayer, blockEntity, pos);
 
             } else {
                 throw new IllegalStateException("Our named container provider is missing!");

@@ -1,6 +1,5 @@
 package com.xiaohunao.equipmentbenediction.attribute;
 
-import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
 import com.xiaohunao.equipmentbenediction.registry.AttributesRegister;
 import com.xiaohunao.equipmentbenediction.util.AttributeUtil;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class ExecuteAttribute extends BaseAttribute {
-    public static final String NAME = "attribute." + EquipmentBenediction.MOD_ID + ".execute";
+    public static final String NAME = "generic.execute";
 
     public ExecuteAttribute() {
         super(NAME);
@@ -26,8 +25,8 @@ public class ExecuteAttribute extends BaseAttribute {
         if (entity.level.isClientSide) return;
 
         if (entity instanceof LivingEntity livingEntity) {
-            float attributeValue = AttributeUtil.getAttributeValue(livingEntity, AttributesRegister.EXECUTE.get());
-            LivingEntity entityLiving = event.getEntity();
+            float attributeValue = AttributeUtil.getAttributeValue(livingEntity, AttributesRegister.EXECUTE);
+            LivingEntity entityLiving = event.getEntityLiving();
             if (entityLiving == null) return;
             float health = entityLiving.getHealth();
             float maxHealth = entityLiving.getMaxHealth();

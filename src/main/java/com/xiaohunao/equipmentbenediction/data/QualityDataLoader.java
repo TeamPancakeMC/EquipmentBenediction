@@ -11,7 +11,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -47,7 +46,7 @@ public class QualityDataLoader extends SimpleJsonResourceReloadListener {
     }
 
     public boolean isValid(ItemStack stack) {
-        return isValid(ForgeRegistries.ITEMS.getKey(stack.getItem()));
+        return isValid(stack.getItem().getRegistryName());
     }
 
     public boolean isValid(ResourceLocation id) {

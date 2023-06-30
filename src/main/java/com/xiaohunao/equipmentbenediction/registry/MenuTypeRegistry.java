@@ -11,7 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class MenuTypeRegistry {
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, EquipmentBenediction.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, EquipmentBenediction.MOD_ID);
 
     public static final RegistryObject<MenuType<RecastingDeskContainerMenu>> RECASTING_DESK = MENUS.register("recasting_desk_menu", () -> IForgeMenuType.create(RecastingDeskContainerMenu::new));
 

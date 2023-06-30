@@ -1,6 +1,5 @@
 package com.xiaohunao.equipmentbenediction.attribute;
 
-import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
 import com.xiaohunao.equipmentbenediction.registry.AttributesRegister;
 import com.xiaohunao.equipmentbenediction.util.AttributeUtil;
 import net.minecraft.world.entity.Entity;
@@ -11,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class AbsorbBloodAttribute extends BaseAttribute {
-    public static final String NAME = "attribute." + EquipmentBenediction.MOD_ID + ".absorb_blood";
+    public static final String NAME = "generic.absorb_blood";
 
     public AbsorbBloodAttribute() {
         super(NAME);
@@ -25,7 +24,7 @@ public class AbsorbBloodAttribute extends BaseAttribute {
         if (entity.level.isClientSide) return;
 
         if (entity instanceof LivingEntity livingEntity) {
-            float attributeValue = AttributeUtil.getAttributeValue(livingEntity, AttributesRegister.ABSORB_BLOOD.get());
+            float attributeValue = AttributeUtil.getAttributeValue(livingEntity, AttributesRegister.ABSORB_BLOOD);
             float amount = event.getAmount();
             livingEntity.heal(amount * attributeValue);
         }

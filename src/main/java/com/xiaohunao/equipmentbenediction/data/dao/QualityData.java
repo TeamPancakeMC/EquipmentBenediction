@@ -2,7 +2,6 @@ package com.xiaohunao.equipmentbenediction.data.dao;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class QualityData {
     }
 
     public boolean isValid(ItemStack stack) {
-        return isValid(ForgeRegistries.ITEMS.getKey(stack.getItem()));
+        return isValid(stack.getItem().getRegistryName());
     }
 
     public boolean isValid(ResourceLocation id) {
@@ -81,12 +80,12 @@ public class QualityData {
     @Override
     public String toString() {
         return "EquipmentQualityData{" +
-                "id='" + getId() + '\'' +
-                ", verifiers=" + getVerifiers() +
-                ", color='" + getColor() + '\'' +
-                ", chance=" + getChance() +
-                ", level=" + getLevel() +
-                ", count=" + getCount() +
+                "id='" + id + '\'' +
+                ", verifiers=" + verifiers +
+                ", color='" + color + '\'' +
+                ", chance=" + chance +
+                ", level=" + level +
+                ", count=" + count +
                 '}';
     }
 }
