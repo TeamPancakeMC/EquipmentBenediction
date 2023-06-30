@@ -10,7 +10,7 @@
   ],
   "attributes": [
     {
-      "type": "equipmentbenediction:generic.levitation_attack",
+      "type": "equipmentbenediction:levitation_attack",
       "modifier": {
         "name": "test",
         "amount": 1.0,

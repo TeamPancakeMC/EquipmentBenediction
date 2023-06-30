@@ -10,7 +10,7 @@
   ],
   "attributes": [
     {
-      "type": "equipmentbenediction:generic.execute",
+      "type": "equipmentbenediction:execute",
       "modifier": {
         "name": "test",
         "amount": 1.0,
