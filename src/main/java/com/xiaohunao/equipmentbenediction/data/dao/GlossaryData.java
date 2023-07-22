@@ -1,27 +1,31 @@
 package com.xiaohunao.equipmentbenediction.data.dao;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.List;
+import java.util.Map;
 
 public class GlossaryData {
     private final String id;
     private final int quality_level;
-    private final String color;
+    private final ChatFormatting color;
     private final float chance;
     private final List<ItemVerifier> verifiers;
-    private final List<AttributeData> attributes;
+    private final List<String> slots;
+    private final Map<Attribute, AttributeModifier> attributeMap;
 
-    public GlossaryData(String id, int quality_level, String color,
-                        float chance, List<ItemVerifier> verifiers, List<AttributeData> attributes) {
+    public GlossaryData(String id, int quality_level, ChatFormatting color, float chance, List<String> slots,
+                        List<ItemVerifier> verifiers, Map<Attribute, AttributeModifier> attributeMap) {
         this.id = id;
         this.quality_level = quality_level;
         this.color = color;
         this.chance = chance;
         this.verifiers = verifiers;
-        this.attributes = attributes;
+        this.slots = slots;
+        this.attributeMap = attributeMap;
     }
 
     public String getId() {
@@ -32,7 +36,7 @@ public class GlossaryData {
         return quality_level;
     }
 
-    public String getColor() {
+    public ChatFormatting getColor() {
         return color;
     }
 
@@ -44,19 +48,28 @@ public class GlossaryData {
         return verifiers;
     }
 
-    public List<AttributeData> getAttribute() {
-        return attributes;
-    }
-    public boolean isValid(ItemStack stack) {
-        return isValid(ForgeRegistries.ITEMS.getKey(stack.getItem()));
+    public List<String> getSlots() {
+        return slots;
     }
 
-    public boolean isValid(ResourceLocation id) {
-        for (ItemVerifier verifier : this.verifiers) {
-            if (verifier.isValid(id)) {
-                return true;
-            }
-        }
-        return false;
+    public Map<Attribute, AttributeModifier> getAttributeMap() {
+        return attributeMap;
+    }
+
+    public boolean isValid(ResourceLocation key){
+        return verifiers.stream().anyMatch(itemVerifier -> itemVerifier.isValid(key));
+    }
+
+    @Override
+    public String toString() {
+        return "GlossaryData{" +
+                "id='" + id + '\'' +
+                ", quality_level=" + quality_level +
+                ", color=" + color +
+                ", chance=" + chance +
+                ", verifiers=" + verifiers +
+                ", slots=" + slots +
+                ", attributeMap=" + attributeMap +
+                '}';
     }
 }

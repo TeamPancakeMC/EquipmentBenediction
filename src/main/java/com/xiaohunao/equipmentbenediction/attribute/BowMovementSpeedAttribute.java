@@ -7,24 +7,24 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BowItem;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.UUID;
 
-@Mod.EventBusSubscriber
-public class BowMovementSpeedAttribute extends BaseAttribute {
 
+public class BowMovementSpeedAttribute extends BaseAttribute {
     public static final UUID BOW_MOVEMENT_SPEED_UUID = UUID.fromString("7107DE5E-7CE8-4030-940E-514C1F160890");
     public static final String NAME = "generic.bow_movement_speed";
 
     public BowMovementSpeedAttribute() {
         super(NAME);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
-    public static void onLivingEntityUseBowStart(LivingEntityUseItemEvent.Start event) {
+    public void onLivingEntityUseBowStart(LivingEntityUseItemEvent.Start event) {
         if (event.getItem().getItem() instanceof BowItem) {
             LivingEntity entityLiving = event.getEntity();
             AttributeInstance movementSpeed = entityLiving.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -40,7 +40,7 @@ public class BowMovementSpeedAttribute extends BaseAttribute {
     }
 
     @SubscribeEvent
-    public static void onLivingEntityUseBowFinish(LivingEntityUseItemEvent.Stop event) {
+    public void onLivingEntityUseBowFinish(LivingEntityUseItemEvent.Stop event) {
         LivingEntity entityLiving = event.getEntity();
         if (event.getItem().getItem() instanceof BowItem) {
             AttributeInstance movementSpeed = entityLiving.getAttribute(Attributes.MOVEMENT_SPEED);

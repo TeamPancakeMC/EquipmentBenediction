@@ -9,6 +9,7 @@ public interface IGlossaryCapability {
 
     List<String> getGlossaryIDList();
 
-    void addGlossaryID(String id);
-    void clearGlossaryIDList();
+    void addGlossary(String id);
+
+    void clearGlossary();
 }

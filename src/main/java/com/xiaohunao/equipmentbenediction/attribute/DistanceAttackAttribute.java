@@ -1,21 +1,27 @@
 package com.xiaohunao.equipmentbenediction.attribute;
 
+
 import com.xiaohunao.equipmentbenediction.registry.AttributesRegister;
 import com.xiaohunao.equipmentbenediction.util.AttributeUtil;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
-public class DistanceAttackAttribute {
-    public static void damageCalculate(LivingAttackEvent event, Attribute attributeName) {
+
+
+public class DistanceAttackAttribute extends BaseAttribute{
+
+    public DistanceAttackAttribute(String name) {
+        super(name);
+    }
+
+    public void damageCalculate(LivingAttackEvent event, Attribute attributeName) {
         Entity entity = event.getSource().getEntity();
         if (entity == null) return;
-        if (entity.level.isClientSide) return;
+        Level level = entity.level();
+        if (level.isClientSide) return;
 
         if (entity instanceof LivingEntity attack) {
             LivingEntity target = event.getEntity();
@@ -38,44 +44,8 @@ public class DistanceAttackAttribute {
             } else if (attributeName.equals(AttributesRegister.FAR_DISTANCE_ATTACK.get())) {
                 damage = maxAttack * distance / 10;
             }
-            target.hurt(DamageSource.GENERIC, (float) damage);
-        }
-    }
-
-    @Mod.EventBusSubscriber
-    public static class Nigh extends BaseAttribute {
-        public static final String NAME = "generic.nigh_distance_attack";
-
-        public Nigh() {
-            super(NAME);
-        }
-
-
-        @SubscribeEvent
-        public static void damageCalculate(LivingAttackEvent event) {
-            LivingEntity target = event.getEntity();
-            if (target.level.isClientSide) return;
-            if (event.getSource().getEntity() instanceof LivingEntity) {
-                DistanceAttackAttribute.damageCalculate(event, AttributesRegister.NIGH_DISTANCE_ATTACK.get());
-            }
-        }
-    }
-
-    @Mod.EventBusSubscriber
-    public static class Far extends BaseAttribute {
-        public static final String NAME = "generic.far_distance_attack";
-
-        public Far() {
-            super(NAME);
-        }
-
-        @SubscribeEvent
-        public static void damageCalculate(LivingAttackEvent event) {
-            LivingEntity target = event.getEntity();
-            if (target.level.isClientSide) return;
-            if (event.getSource().getEntity() instanceof LivingEntity) {
-                DistanceAttackAttribute.damageCalculate(event, AttributesRegister.FAR_DISTANCE_ATTACK.get());
-            }
+            target.hurt(level.damageSources().generic(), (float) damage);
         }
     }
 }
+

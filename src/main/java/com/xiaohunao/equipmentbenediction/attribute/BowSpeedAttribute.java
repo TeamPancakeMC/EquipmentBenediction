@@ -5,19 +5,20 @@ import com.xiaohunao.equipmentbenediction.util.AttributeUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+
 public class BowSpeedAttribute extends BaseAttribute{
     public static final String NAME = "generic.bow_speed";
     public BowSpeedAttribute() {
         super(NAME);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
-    public static void onLivingEntityUseItem(LivingEntityUseItemEvent.Start event) {
+    public void onLivingEntityUseItem(LivingEntityUseItemEvent.Start event) {
         ItemStack stack = event.getItem();
         if (stack.getItem() instanceof BowItem) {
             LivingEntity entityLiving = event.getEntity();

@@ -4,13 +4,15 @@ import com.xiaohunao.equipmentbenediction.registry.AttributesRegister;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SlownessAttackAttribute extends BaseEffectAttribute{
-    private static final String NAME = "generic.slowness_attack";
+    public static final String NAME = "generic.slowness_attack";
     public SlownessAttackAttribute() {
         super(NAME);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
