@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -25,7 +26,10 @@ public class EquipmentBenediction {
         MinecraftForge.EVENT_BUS.addListener(this::onDataPackLoad);
 
         MinecraftForge.EVENT_BUS.register(new ItemMarkEvent());
-        MinecraftForge.EVENT_BUS.register(new CuriosMarkEvent());
+        if (ModList.get().isLoaded("curios")) {
+            MinecraftForge.EVENT_BUS.register(new CuriosMarkEvent());
+        }
+
 
     }
     public static ResourceLocation asResource(String path) {

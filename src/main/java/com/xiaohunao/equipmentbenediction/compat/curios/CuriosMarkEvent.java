@@ -17,9 +17,7 @@ public class CuriosMarkEvent {
     public void addAttributeModifiers(ItemAttributeModifierEvent event) {
         ItemStack itemStack = event.getItemStack();
         itemStack.getCapability(CapabilityRegistry.GLOSSARY).ifPresent(cap ->{
-            if (ModList.get().isLoaded("curios")) {
-                addCurios(itemStack, cap.getGlossaryIDList());
-            }
+            addCurios(itemStack, cap.getGlossaryIDList());
         });
     }
 
