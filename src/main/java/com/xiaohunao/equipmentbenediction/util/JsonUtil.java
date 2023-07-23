@@ -3,6 +3,7 @@ package com.xiaohunao.equipmentbenediction.util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
+import com.xiaohunao.equipmentbenediction.data.dao.AttributeData;
 import com.xiaohunao.equipmentbenediction.data.dao.GlossaryData;
 import com.xiaohunao.equipmentbenediction.data.dao.ItemVerifier;
 import net.minecraft.ChatFormatting;
@@ -40,13 +41,8 @@ public class JsonUtil {
                             .map(JsonElement::getAsJsonObject)
                             .forEach(jsonObject -> verifiers.add(GSON.fromJson(jsonObject, ItemVerifier.class)));
 
-
-            List<String> slots = Lists.newArrayList();
-            JsonArray slotsArray = asJsonObject.get("slots").getAsJsonArray();
-            slotsArray.forEach(jsonElement -> slots.add(jsonElement.getAsString()));
-
             JsonArray asJsonArray = asJsonObject.get("attributes").getAsJsonArray();
-            Map<Attribute, AttributeModifier> attributeMap = Maps.newHashMap();
+            List<AttributeData> attributeDataList = Lists.newArrayList();
             asJsonArray.asList().stream()
                     .map(JsonElement::getAsJsonObject)
                     .forEach(jsonObject -> {
@@ -64,9 +60,15 @@ public class JsonUtil {
                         }
                         AttributeModifier.Operation operationValue = AttributeModifier.Operation.fromValue(operation);
                         AttributeModifier attributeModifier = new AttributeModifier(uuid, name, amount, operationValue);
-                        attributeMap.put(attribute, attributeModifier);
+
+                        List<String> slots = Lists.newArrayList();
+                        JsonArray slotsArray = jsonObject.get("slots").getAsJsonArray();
+                        slotsArray.forEach(jsonElement -> slots.add(jsonElement.getAsString()));
+
+                        AttributeData attributeData = new AttributeData(attribute, attributeModifier, slots);
+                        attributeDataList.add(attributeData);
                     });
-            return new GlossaryData(id, quality_level, chatFormatting, chance, slots, verifiers, attributeMap);
+            return new GlossaryData(id, quality_level, chatFormatting, chance, verifiers,attributeDataList);
         }
     }
 

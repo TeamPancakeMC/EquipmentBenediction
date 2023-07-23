@@ -12,6 +12,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
@@ -63,8 +65,9 @@ public class ItemMarkEvent {
         itemStack.getCapability(CapabilityRegistry.GLOSSARY).ifPresent(cap ->
                 cap.getGlossaryIDList().stream()
                 .map(GlossaryDataLoader.GLOSSARY_DATA_MAP::get)
-                .filter(glossaryData -> glossaryData.getSlots().stream().anyMatch(slot -> event.getSlotType() == EquipmentSlot.byName(slot)))
-                .forEach(glossaryData -> glossaryData.getAttributeMap().forEach(event::addModifier)));
+                .flatMap(glossaryData -> glossaryData.getAttributeDataList().stream())
+                        .filter(attributeData -> attributeData.getSlots().contains(event.getSlotType().getName()))
+                        .forEach(attributeData -> event.addModifier(attributeData.getAttribute(), attributeData.getAttributeModifier())));
     }
 
     @SubscribeEvent

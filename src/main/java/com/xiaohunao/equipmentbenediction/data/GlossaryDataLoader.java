@@ -59,6 +59,7 @@ public class GlossaryDataLoader extends SimpleJsonResourceReloadListener {
                     int level = qualityData.getLevel();
 
                     return Stream.generate(GlossaryDataLoader::getRandomGlossaryData)
+                            .distinct()
                             .limit(count)
                             .filter(glossaryData -> glossaryData.getQuality_level() <= level)
                             .filter(glossaryData -> glossaryData.isValid(ForgeRegistries.ITEMS.getKey(stack.getItem())))

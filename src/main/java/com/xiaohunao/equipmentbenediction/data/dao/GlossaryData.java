@@ -14,18 +14,16 @@ public class GlossaryData {
     private final ChatFormatting color;
     private final float chance;
     private final List<ItemVerifier> verifiers;
-    private final List<String> slots;
-    private final Map<Attribute, AttributeModifier> attributeMap;
+    private final List<AttributeData> attributeDataList;
 
-    public GlossaryData(String id, int quality_level, ChatFormatting color, float chance, List<String> slots,
-                        List<ItemVerifier> verifiers, Map<Attribute, AttributeModifier> attributeMap) {
+
+    public GlossaryData(String id, int quality_level, ChatFormatting color, float chance, List<ItemVerifier> verifiers, List<AttributeData> attributeDataList) {
         this.id = id;
         this.quality_level = quality_level;
         this.color = color;
         this.chance = chance;
         this.verifiers = verifiers;
-        this.slots = slots;
-        this.attributeMap = attributeMap;
+        this.attributeDataList = attributeDataList;
     }
 
     public String getId() {
@@ -48,28 +46,11 @@ public class GlossaryData {
         return verifiers;
     }
 
-    public List<String> getSlots() {
-        return slots;
-    }
-
-    public Map<Attribute, AttributeModifier> getAttributeMap() {
-        return attributeMap;
+    public List<AttributeData> getAttributeDataList() {
+        return attributeDataList;
     }
 
     public boolean isValid(ResourceLocation key){
         return verifiers.stream().anyMatch(itemVerifier -> itemVerifier.isValid(key));
-    }
-
-    @Override
-    public String toString() {
-        return "GlossaryData{" +
-                "id='" + id + '\'' +
-                ", quality_level=" + quality_level +
-                ", color=" + color +
-                ", chance=" + chance +
-                ", verifiers=" + verifiers +
-                ", slots=" + slots +
-                ", attributeMap=" + attributeMap +
-                '}';
     }
 }

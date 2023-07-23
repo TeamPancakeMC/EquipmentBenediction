@@ -27,10 +27,10 @@ public class CuriosMarkEvent {
                 .map(GlossaryDataLoader.GLOSSARY_DATA_MAP::get)
                 .forEach(glossaryData -> {
                     Set<String> curioTags = curiosHelper.getCurioTags(itemStack.getItem());
-                    glossaryData.getSlots().stream()
-                            .filter(curioTags::contains)
-                            .forEach(slotType -> glossaryData.getAttributeMap().forEach((attribute, attributeModifier)
-                                    -> curiosHelper.addModifier(itemStack, attribute, attributeModifier.getName(), attributeModifier.getId(), attributeModifier.getAmount(), attributeModifier.getOperation(), slotType)));
+                    glossaryData.getAttributeDataList()
+                        .forEach(attributeData -> attributeData.getSlots().stream()
+                                .filter(curioTags::contains)
+                                .forEach(slotType -> curiosHelper.addModifier(itemStack, attributeData.getAttribute(), attributeData.getAttributeModifier().getName(), attributeData.getAttributeModifier().getId(), attributeData.getAttributeModifier().getAmount(), attributeData.getAttributeModifier().getOperation(), slotType)));
                 });
     }
 }
