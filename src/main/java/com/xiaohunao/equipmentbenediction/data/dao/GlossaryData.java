@@ -1,26 +1,28 @@
 package com.xiaohunao.equipmentbenediction.data.dao;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+
 
 import java.util.List;
+
 
 public class GlossaryData {
     private final String id;
     private final int quality_level;
-    private final String color;
+    private final ChatFormatting color;
     private final float chance;
     private final List<ItemVerifier> verifiers;
-    private final List<AttributeData> attributes;
+    private final List<AttributeData> attributeDataList;
 
-    public GlossaryData(String id, int quality_level, String color,
-                        float chance, List<ItemVerifier> verifiers, List<AttributeData> attributes) {
+
+    public GlossaryData(String id, int quality_level, ChatFormatting color, float chance, List<ItemVerifier> verifiers, List<AttributeData> attributeDataList) {
         this.id = id;
         this.quality_level = quality_level;
         this.color = color;
         this.chance = chance;
         this.verifiers = verifiers;
-        this.attributes = attributes;
+        this.attributeDataList = attributeDataList;
     }
 
     public String getId() {
@@ -31,7 +33,7 @@ public class GlossaryData {
         return quality_level;
     }
 
-    public String getColor() {
+    public ChatFormatting getColor() {
         return color;
     }
 
@@ -43,19 +45,11 @@ public class GlossaryData {
         return verifiers;
     }
 
-    public List<AttributeData> getAttribute() {
-        return attributes;
-    }
-    public boolean isValid(ItemStack stack) {
-        return isValid(stack.getItem().getRegistryName());
+    public List<AttributeData> getAttributeDataList() {
+        return attributeDataList;
     }
 
-    public boolean isValid(ResourceLocation id) {
-        for (ItemVerifier verifier : this.verifiers) {
-            if (verifier.isValid(id)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean isValid(ResourceLocation key){
+        return verifiers.stream().anyMatch(itemVerifier -> itemVerifier.isValid(key));
     }
 }

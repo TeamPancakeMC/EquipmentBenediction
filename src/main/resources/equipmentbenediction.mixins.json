@@ -5,8 +5,6 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "equipmentbenediction.refmap.json",
   "mixins": [
-    "ItemMixin",
-    "ItemStackMixin"
   ],
   "client": [
   ],

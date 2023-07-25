@@ -7,12 +7,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
 
-
-@Mod.EventBusSubscriber
 public abstract class BaseEffectAttribute extends BaseAttribute {
 
     public BaseEffectAttribute(String name) {

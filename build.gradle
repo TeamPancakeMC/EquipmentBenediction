@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'org.spongepowered.mixin'
 
 group = 'com.xiaohunao'
-version = '0.0.1_beta'
+version = '1.18.2-0.0.3'
 
 java {
     archivesBaseName = 'equipmentbenediction'
@@ -141,6 +141,9 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
 }
 
 dependencies {
@@ -148,6 +151,9 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.8'
+
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_Version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_Version}:api")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency

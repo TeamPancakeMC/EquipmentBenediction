@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ODO",
+    "OBO",
+    "OOO"
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "B": {
+      "item": "minecraft:beacon"
+    }
+  },
+  "result": {
+    "item": "equipmentbenediction:recasting_desk",
+    "count": 1
+  }
+}

@@ -1,7 +1,6 @@
-package com.xiaohunao.equipmentbenediction.block_entity;
+package com.xiaohunao.equipmentbenediction.recasting;
 
-import com.xiaohunao.equipmentbenediction.block_entity.container.RecastingDeskContainerMenu;
-import com.xiaohunao.equipmentbenediction.registry.BlockEntityRegistry;
+import com.xiaohunao.equipmentbenediction.registry.RecastingRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -32,18 +31,19 @@ public class RecastingDeskBlockEntity extends BlockEntity implements MenuProvide
     };
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     public RecastingDeskBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(BlockEntityRegistry.RECASTING_DESK_BLOCK_ENTITY.get(), p_155229_, p_155230_);
+        super(RecastingRegistry.RECASTING_DESK_BLOCK_ENTITY.get(), p_155229_, p_155230_);
     }
 
 
     @Override
+    @NotNull
     public Component getDisplayName() {
         return new TranslatableComponent("container.recasting_desk");
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+    public AbstractContainerMenu createMenu(int windowId, @NotNull Inventory inventory, @NotNull Player player) {
         return new RecastingDeskContainerMenu(windowId, inventory, this);
     }
 
@@ -76,7 +76,7 @@ public class RecastingDeskBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
     }

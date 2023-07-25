@@ -1,12 +1,10 @@
-package com.xiaohunao.equipmentbenediction.screen;
+package com.xiaohunao.equipmentbenediction.recasting;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
-import com.xiaohunao.equipmentbenediction.block_entity.RecastingDeskBlockEntity;
-import com.xiaohunao.equipmentbenediction.block_entity.container.RecastingDeskContainerMenu;
+import com.xiaohunao.equipmentbenediction.data.QualityDataLoader;
 import com.xiaohunao.equipmentbenediction.data.dao.QualityData;
-import com.xiaohunao.equipmentbenediction.data.dao.RecastingRequirement;
 import com.xiaohunao.equipmentbenediction.network.EquipmentQualityPacketHandler;
 import com.xiaohunao.equipmentbenediction.network.message.QualitySyncMessage;
 import com.xiaohunao.equipmentbenediction.registry.CapabilityRegistry;
@@ -21,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class RecastingDeskScreen extends AbstractContainerScreen<RecastingDeskContainerMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(EquipmentBenediction.MOD_ID, "textures/gui/recasting_desk_gui.png");
     private static boolean isPressed = false;
@@ -30,7 +30,7 @@ public class RecastingDeskScreen extends AbstractContainerScreen<RecastingDeskCo
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -38,7 +38,7 @@ public class RecastingDeskScreen extends AbstractContainerScreen<RecastingDeskCo
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
@@ -56,7 +56,7 @@ public class RecastingDeskScreen extends AbstractContainerScreen<RecastingDeskCo
         }
 
         @Override
-        public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        public void renderButton(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             if (isPressed)
                 blit(matrixStack, x, y, 21, 167, 19, 19, 256, 256);
@@ -75,13 +75,11 @@ public class RecastingDeskScreen extends AbstractContainerScreen<RecastingDeskCo
                 ItemStack equipmentStack = itemHandler.getStackInSlot(0);
                 ItemStack stack = itemHandler.getStackInSlot(1);
                 equipmentStack.getCapability(CapabilityRegistry.QUALITY).ifPresent(cap -> {
-                    QualityData qualityData = EquipmentBenediction.QUALITY_DATA.get(cap.getId());
+                    QualityData qualityData = QualityDataLoader.QUALITY_DATA_MAP.get(cap.getId());
                     for (RecastingRequirement recastingRequirement : qualityData.getRecastingRequirement()) {
-                        boolean completeValid = recastingRequirement.isCompleteValid(stack);
-                        boolean valid = qualityData.isValid(stack);
-                        if (completeValid && valid) {
+                        if (recastingRequirement.isCompleteValid(stack)) {
                             boolean hasQuality = cap.isHasQuality();
-                            String id = EquipmentBenediction.QUALITY_DATA.getRandomEquipmentQualityData().getId();
+                            String id = Objects.requireNonNull(QualityDataLoader.getRandomQuality()).getId();
                             EquipmentQualityPacketHandler.INSTANCE.sendToServer(new QualitySyncMessage(id, hasQuality));
                         }
                     }

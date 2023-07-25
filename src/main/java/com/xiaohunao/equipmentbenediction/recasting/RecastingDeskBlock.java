@@ -1,6 +1,5 @@
-package com.xiaohunao.equipmentbenediction.block;
+package com.xiaohunao.equipmentbenediction.recasting;
 
-import com.xiaohunao.equipmentbenediction.block_entity.RecastingDeskBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +26,7 @@ public class RecastingDeskBlock extends Block implements EntityBlock {
     }
 
     @Override
+    @NotNull
     public InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult blockHitResult) {
         if (!level.isClientSide()) {
             BlockEntity entity = level.getBlockEntity(pos);

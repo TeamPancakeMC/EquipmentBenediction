@@ -1,110 +1,87 @@
 package com.xiaohunao.equipmentbenediction.data;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
-import com.xiaohunao.equipmentbenediction.data.dao.AttributeData;
 import com.xiaohunao.equipmentbenediction.data.dao.GlossaryData;
 import com.xiaohunao.equipmentbenediction.data.dao.QualityData;
 import com.xiaohunao.equipmentbenediction.registry.CapabilityRegistry;
+import com.xiaohunao.equipmentbenediction.util.JsonUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GlossaryDataLoader extends SimpleJsonResourceReloadListener {
-    public static final Gson GSON = new GsonBuilder()
-            .setPrettyPrinting()
-            .disableHtmlEscaping()
-            .create();
 
-    private Map<String, GlossaryData> glossaryDataHashMap;
+    public static Map<String, GlossaryData> GLOSSARY_DATA_MAP = Maps.newHashMap();
 
     public GlossaryDataLoader() {
-        super(GSON, "glossary");
+        super(JsonUtil.GSON, "glossary");
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> p_10793_, ResourceManager p_10794_, ProfilerFiller p_10795_) {
-        Map<String, GlossaryData> glossaryDataHashMap = Maps.newHashMap();
-        for (Map.Entry<ResourceLocation, JsonElement> entry : p_10793_.entrySet()) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller filler) {
+        jsonElementMap.forEach((resourceLocation, jsonElement) -> {
             try {
-                GlossaryData glossaryData = GSON.fromJson(entry.getValue(), GlossaryData.class);
-                glossaryDataHashMap.put(glossaryData.getId(), glossaryData);
-            } catch (IllegalArgumentException | JsonParseException exception) {
-                throw new JsonParseException("解析词缀Json数据包错误" + entry.getKey(), exception);
+                GlossaryData glossaryData = JsonUtil.GSON.fromJson(jsonElement, GlossaryData.class);
+                GLOSSARY_DATA_MAP.put(glossaryData.getId(),glossaryData);
+            }catch (Exception e){
+                throw new RuntimeException("解析词缀Json数据包错误" + resourceLocation, e);
             }
-        }
-        this.glossaryDataHashMap = glossaryDataHashMap;
-    }
-
-    public Map<String, GlossaryData> getGlossaryDataHashMap() {
-        return glossaryDataHashMap;
-    }
-
-    public List<GlossaryData> getFilteredGlossary(ItemStack stack) {
-        List<GlossaryData> glossaryDataList = new ArrayList<>();
-        stack.getCapability(CapabilityRegistry.QUALITY).ifPresent(qualityCap -> {
-            String id = qualityCap.getId();
-            QualityData qualityData = EquipmentBenediction.QUALITY_DATA.get(id);
-
-            int count = qualityData.getCount();
-            int level = qualityData.getLevel();
-
-            for (int i = 0; i < count; i++) {
-                glossaryDataList.add(getRandomGlossaryData());
-            }
-            glossaryDataList.removeIf(glossaryData -> glossaryData.getQuality_level() > level);
-            glossaryDataList.removeIf(glossaryData -> !glossaryData.isValid(stack.getItem().getRegistryName()));
-            filterAttribute(glossaryDataList);
         });
-        return glossaryDataList;
+    }
+    public static boolean isValid(ItemStack stack) {
+        return isValid(ForgeRegistries.ITEMS.getKey(stack.getItem()));
     }
 
-    public GlossaryData get(String glossaryID) {
-        return glossaryDataHashMap.get(glossaryID);
+    public static boolean isValid(ResourceLocation id) {
+        if (GLOSSARY_DATA_MAP == null) return false;
+        return GLOSSARY_DATA_MAP.values().stream().anyMatch(glossaryData -> glossaryData.isValid(id));
     }
 
+    public static List<GlossaryData> getFilteredGlossary(ItemStack stack) {
+        return stack.getCapability(CapabilityRegistry.QUALITY)
+                .map(qualityCap -> {
+                    String id = qualityCap.getId();
+                    QualityData qualityData = QualityDataLoader.QUALITY_DATA_MAP.get(id);
 
-    public GlossaryData getRandomGlossaryData() {
-        GlossaryData glossary = null;
-        List<GlossaryData> glossaryDataList = glossaryDataHashMap.values().stream().toList();
-        do {
-            for (GlossaryData glossaryData : glossaryDataList) {
-                float chance = glossaryData.getChance();
-                if (Math.random() < chance) {
-                    glossary = glossaryData;
-                }
-            }
-        } while (glossary == null);
-        return glossary;
+                    int count = qualityData.getCount();
+                    int level = qualityData.getLevel();
+
+                    return Stream.generate(GlossaryDataLoader::getRandomGlossaryData)
+                            .distinct()
+                            .limit(count)
+                            .filter(glossaryData -> glossaryData.getQuality_level() <= level)
+                            .filter(glossaryData -> glossaryData.isValid(ForgeRegistries.ITEMS.getKey(stack.getItem())))
+                            .collect(Collectors.toList());
+                })
+                .orElse(Collections.emptyList());
     }
 
-    public void filterAttribute(List<GlossaryData> glossaryDataList) {
-        Set<String> set = new HashSet<>();
-        Iterator<GlossaryData> iterator = glossaryDataList.iterator();
-        while (iterator.hasNext()) {
-            GlossaryData glossaryData = iterator.next();
-            List<AttributeData> attributeDataList = glossaryData.getAttribute();
-            boolean isDuplicate = false;
-            for (AttributeData attributeData : attributeDataList) {
-                String type = attributeData.getType();
-                if (set.contains(type)) {
-                    isDuplicate = true;
-                    break;
-                } else {
-                    set.add(type);
-                }
-            }
-            if (isDuplicate) {
-                iterator.remove();
+    public static GlossaryData getRandomGlossaryData() {
+        List<GlossaryData> glossaryDataList = new ArrayList<>(GLOSSARY_DATA_MAP.values());
+        double totalWeight = glossaryDataList.stream()
+                .mapToDouble(GlossaryData::getChance)
+                .sum();
+        double randomWeight = Math.random() * totalWeight;
+
+        double cumulativeWeight = 0;
+        for (GlossaryData glossaryData : glossaryDataList) {
+            cumulativeWeight += glossaryData.getChance();
+            if (randomWeight < cumulativeWeight) {
+                return glossaryData;
             }
         }
+        throw new IllegalStateException("No GlossaryData found");
     }
 }
