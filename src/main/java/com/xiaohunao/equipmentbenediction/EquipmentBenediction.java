@@ -1,6 +1,7 @@
 package com.xiaohunao.equipmentbenediction;
 
-import com.xiaohunao.equipmentbenediction.compat.curios.CuriosMarkEvent;
+
+import com.xiaohunao.equipmentbenediction.compat.curios.MarkCurios;
 import com.xiaohunao.equipmentbenediction.data.GlossaryDataLoader;
 import com.xiaohunao.equipmentbenediction.data.QualityDataLoader;
 import com.xiaohunao.equipmentbenediction.event.ItemMarkEvent;
@@ -12,6 +13,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import top.theillusivec4.curios.api.CuriosApi;
 
 
 @Mod(EquipmentBenediction.MOD_ID)
@@ -26,10 +28,9 @@ public class EquipmentBenediction {
         MinecraftForge.EVENT_BUS.addListener(this::onDataPackLoad);
 
         MinecraftForge.EVENT_BUS.register(new ItemMarkEvent());
-        if (ModList.get().isLoaded("curios")) {
-            MinecraftForge.EVENT_BUS.register(new CuriosMarkEvent());
+        if (ModList.get().isLoaded(CuriosApi.MODID)){
+            MinecraftForge.EVENT_BUS.register(new MarkCurios());
         }
-
 
     }
     public static ResourceLocation asResource(String path) {
