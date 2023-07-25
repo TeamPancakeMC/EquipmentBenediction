@@ -1,5 +1,6 @@
-package com.xiaohunao.equipmentbenediction.data.dao;
+package com.xiaohunao.equipmentbenediction.recasting;
 
+import com.xiaohunao.equipmentbenediction.data.dao.ItemVerifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 

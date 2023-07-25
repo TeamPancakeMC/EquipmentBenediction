@@ -1,8 +1,9 @@
 package com.xiaohunao.equipmentbenediction.network.message;
 
 
-import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
-import com.xiaohunao.equipmentbenediction.block_entity.container.RecastingDeskContainerMenu;
+
+import com.xiaohunao.equipmentbenediction.data.QualityDataLoader;
+import com.xiaohunao.equipmentbenediction.recasting.RecastingDeskContainerMenu;
 import com.xiaohunao.equipmentbenediction.registry.CapabilityRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,13 +43,13 @@ public class QualitySyncMessage {
             menu.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(cap -> {
                 ItemStack stack = cap.getStackInSlot(0);
                 stack.getCapability(CapabilityRegistry.QUALITY).ifPresent(quality -> {
-                    boolean recasting = EquipmentBenediction.QUALITY_DATA.get(quality.getId()).Recasting(cap.getStackInSlot(1));
+                    boolean recasting = QualityDataLoader.QUALITY_DATA_MAP.get(quality.getId()).Recasting(cap.getStackInSlot(1));
                     if (recasting) {
                         quality.setHasQuality(message.hasQuality);
                         quality.setId(message.id);
                         stack.getCapability(CapabilityRegistry.GLOSSARY).ifPresent(glossary -> {
                             glossary.setHasGlossary(false);
-                            glossary.clearGlossaryIDList();
+                            glossary.clearGlossary();
                         });
                     }
                 });

@@ -1,67 +1,61 @@
 package com.xiaohunao.equipmentbenediction;
 
-import com.mojang.logging.LogUtils;
-import com.xiaohunao.equipmentbenediction.attribute.LevitationAttackAttribute;
-import com.xiaohunao.equipmentbenediction.attribute.PoisonAttackAttribute;
-import com.xiaohunao.equipmentbenediction.attribute.SlownessAttackAttribute;
-import com.xiaohunao.equipmentbenediction.attribute.WitherAttackAttribute;
+
+
+import com.xiaohunao.equipmentbenediction.compat.curios.MarkCurios;
 import com.xiaohunao.equipmentbenediction.data.GlossaryDataLoader;
 import com.xiaohunao.equipmentbenediction.data.QualityDataLoader;
+import com.xiaohunao.equipmentbenediction.event.ItemMarkEvent;
 import com.xiaohunao.equipmentbenediction.network.EquipmentQualityPacketHandler;
-import com.xiaohunao.equipmentbenediction.registry.BlockEntityRegistry;
-import com.xiaohunao.equipmentbenediction.registry.BlockRegistry;
-import com.xiaohunao.equipmentbenediction.registry.ItemRegistry;
-import com.xiaohunao.equipmentbenediction.registry.MenuTypeRegistry;
-import com.xiaohunao.equipmentbenediction.screen.RecastingDeskScreen;
+import com.xiaohunao.equipmentbenediction.recasting.RecastingDeskScreen;
+import com.xiaohunao.equipmentbenediction.registry.AttributesRegister;
+import com.xiaohunao.equipmentbenediction.registry.RecastingRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotTypeMessage;
+import top.theillusivec4.curios.api.SlotTypePreset;
 
-import java.util.stream.Collectors;
 
 @Mod(EquipmentBenediction.MOD_ID)
 public class EquipmentBenediction {
     public static final String MOD_ID = "equipmentbenediction";
-    public static final QualityDataLoader QUALITY_DATA = new QualityDataLoader();
-    public static final GlossaryDataLoader GLOSSARY_DATA = new GlossaryDataLoader();
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     public EquipmentBenediction() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
 
-        BlockRegistry.register(eventBus);
-        ItemRegistry.register(eventBus);
-        BlockEntityRegistry.register(eventBus);
-        MenuTypeRegistry.register(eventBus);
+        RecastingRegistry.register(eventBus);
+        AttributesRegister.register(eventBus);
+
+        MinecraftForge.EVENT_BUS.register(new ItemMarkEvent());
+        if (ModList.get().isLoaded(CuriosApi.MODID)){
+            eventBus.addListener(this::enqueueIMC);
+            MinecraftForge.EVENT_BUS.register(new MarkCurios());
+        }
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.addListener(this::onDataPackLoad);
-        onRegisterEvent();
+
     }
 
     public static final CreativeModeTab EQUIPMENT_QUALITY_TAB = new CreativeModeTab("equipmentquality") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(BlockRegistry.RECASTING_DESK.get());
+            return new ItemStack(RecastingRegistry.RECASTING_DESK_ITEM.get());
         }
     };
     public static ResourceLocation asResource(String path) {
@@ -69,24 +63,23 @@ public class EquipmentBenediction {
     }
 
     private void onDataPackLoad(AddReloadListenerEvent event) {
-        event.addListener(QUALITY_DATA);
-        event.addListener(GLOSSARY_DATA);
-    }
-
-    private void onRegisterEvent() {
-        MinecraftForge.EVENT_BUS.register(new PoisonAttackAttribute());
-        MinecraftForge.EVENT_BUS.register(new SlownessAttackAttribute());
-        MinecraftForge.EVENT_BUS.register(new WitherAttackAttribute());
-        MinecraftForge.EVENT_BUS.register(new LevitationAttackAttribute());
+        event.addListener(new QualityDataLoader());
+        event.addListener(new GlossaryDataLoader());
     }
 
 
     public void clientSetup(final FMLClientSetupEvent event) {
-        MenuScreens.register(MenuTypeRegistry.RECASTING_DESK.get(), RecastingDeskScreen::new);
+        MenuScreens.register(RecastingRegistry.RECASTING_DESK_MENU.get(), RecastingDeskScreen::new);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         EquipmentQualityPacketHandler.init();
+    }
 
+    private void enqueueIMC(final InterModEnqueueEvent event) {
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().build());
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.NECKLACE.getMessageBuilder().build());
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BELT.getMessageBuilder().build());
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HANDS.getMessageBuilder().build());
     }
 }

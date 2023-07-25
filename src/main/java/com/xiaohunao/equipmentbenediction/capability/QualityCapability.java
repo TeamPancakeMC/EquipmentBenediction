@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class QualityCapability implements IQualityCapability, ICapabilitySerializable<CompoundTag>, ICapabilityProvider {
 
-    private boolean hasQuality = false;
+    private boolean hasQuality = true;
     private String id = "";
 
     public boolean isHasQuality() {

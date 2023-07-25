@@ -40,6 +40,7 @@ public class AttributeUtil {
 
             }
         }
+        
         for (double amount : zero) {
             base += amount;
         }

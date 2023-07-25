@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GlossaryCapability implements IGlossaryCapability, ICapabilitySerializable<CompoundTag>, ICapabilityProvider {
-    private boolean isHasGlossary = false;
-    private List<String> glossaryIDList = new ArrayList<>();
+    private boolean isHasGlossary = true;
+    private final List<String> glossaryIDList = new ArrayList<>();
 
     public boolean isHasGlossary() {
         return isHasGlossary;
@@ -33,12 +33,12 @@ public class GlossaryCapability implements IGlossaryCapability, ICapabilitySeria
     }
 
     @Override
-    public void addGlossaryID(String id) {
+    public void addGlossary(String id) {
         this.glossaryIDList.add(id);
     }
 
     @Override
-    public void clearGlossaryIDList() {
+    public void clearGlossary() {
         this.glossaryIDList.clear();
     }
 
@@ -52,9 +52,6 @@ public class GlossaryCapability implements IGlossaryCapability, ICapabilitySeria
     public CompoundTag serializeNBT() {
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putBoolean("hasGlossary", this.isHasGlossary);
-        if (this.glossaryIDList == null) {
-            return compoundTag;
-        }
         ListTag tags = new ListTag();
         for (String id : this.glossaryIDList) {
             CompoundTag tag = new CompoundTag();

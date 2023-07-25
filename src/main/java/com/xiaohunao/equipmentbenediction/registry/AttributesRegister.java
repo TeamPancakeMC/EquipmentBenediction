@@ -1,30 +1,29 @@
 package com.xiaohunao.equipmentbenediction.registry;
 
+import com.xiaohunao.equipmentbenediction.EquipmentBenediction;
 import com.xiaohunao.equipmentbenediction.attribute.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AttributesRegister {
-    public static BaseAttribute EXECUTE, BOW_SPEED,BOW_MOVEMENT_SPEED,ABSORB_BLOOD,SUMMON_LIGHTNING,ATTACK_POISON,
-    FAR_DISTANCE_ATTACK,NIGH_DISTANCE_ATTACK,SLOWNESS_ATTACK,WITHER_ATTACK,LEVITATION_ATTACK;
+    public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, EquipmentBenediction.MOD_ID);
 
-    @SubscribeEvent
-    public static void registerAttributes(final RegistryEvent.Register<Attribute> event) {
-        event.getRegistry().registerAll(
-                EXECUTE = new ExecuteAttribute(),
-                BOW_SPEED = new BowSpeedAttribute(),
-                BOW_MOVEMENT_SPEED = new BowMovementSpeedAttribute(),
-                ABSORB_BLOOD = new AbsorbBloodAttribute(),
-                SUMMON_LIGHTNING = new SummonLightningAttribute(),
-                ATTACK_POISON = new PoisonAttackAttribute(),
-                FAR_DISTANCE_ATTACK = new DistanceAttackAttribute.Far(),
-                NIGH_DISTANCE_ATTACK = new DistanceAttackAttribute.Nigh(),
-                SLOWNESS_ATTACK = new SlownessAttackAttribute(),
-                WITHER_ATTACK = new WitherAttackAttribute(),
-                LEVITATION_ATTACK = new LevitationAttackAttribute()
-        );
+    public static final RegistryObject<Attribute> EXECUTE = ATTRIBUTES.register(ExecuteAttribute.NAME, ExecuteAttribute::new);
+    public static final RegistryObject<Attribute> BOW_SPEED = ATTRIBUTES.register(BowSpeedAttribute.NAME, BowSpeedAttribute::new);
+    public static final RegistryObject<Attribute> BOW_MOVEMENT_SPEED = ATTRIBUTES.register(BowMovementSpeedAttribute.NAME, BowMovementSpeedAttribute::new);
+    public static final RegistryObject<Attribute> ABSORB_BLOOD = ATTRIBUTES.register(AbsorbBloodAttribute.NAME, AbsorbBloodAttribute::new);
+    public static final RegistryObject<Attribute> SUMMON_LIGHTNING = ATTRIBUTES.register(SummonLightningAttribute.NAME, SummonLightningAttribute::new);
+    public static final RegistryObject<Attribute> ATTACK_POISON = ATTRIBUTES.register(PoisonAttackAttribute.NAME, PoisonAttackAttribute::new);
+    public static final RegistryObject<Attribute> FAR_DISTANCE_ATTACK = ATTRIBUTES.register(FarAttackAttribute.NAME, FarAttackAttribute::new);
+    public static final RegistryObject<Attribute> NIGH_DISTANCE_ATTACK = ATTRIBUTES.register(NighAttackAttribute.NAME, NighAttackAttribute::new);
+    public static final RegistryObject<Attribute> SLOWNESS_ATTACK = ATTRIBUTES.register(SlownessAttackAttribute.NAME, SlownessAttackAttribute::new);
+    public static final RegistryObject<Attribute> WITHER_ATTACK = ATTRIBUTES.register(WitherAttackAttribute.NAME, WitherAttackAttribute::new);
+    public static final RegistryObject<Attribute> LEVITATION_ATTACK = ATTRIBUTES.register(LevitationAttackAttribute.NAME, LevitationAttackAttribute::new);
+
+    public static void register(IEventBus eventBus) {
+        ATTRIBUTES.register(eventBus);
     }
 }

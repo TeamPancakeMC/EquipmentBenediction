@@ -1,5 +1,6 @@
 package com.xiaohunao.equipmentbenediction.data.dao;
 
+
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -17,22 +18,22 @@ public class ItemVerifier {
         this.tag = tag;
         class_name = className;
     }
-
-
-    public boolean isValid(ResourceLocation itemID) {
+    public boolean isValid(ResourceLocation item_Key){
+        Item item = ForgeRegistries.ITEMS.getValue(item_Key);
+        if (item == null){
+            return false;
+        }
         if (id != null) {
-            return itemID.toString().equals(id);
-        } else if (tag != null) {
+            return item_Key.toString().equals(id);
+        }
+        if (tag != null) {
             TagKey<Item> itemTag = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(tag));
-            ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(itemID));
+            ItemStack stack = new ItemStack(item);
             return stack.is(itemTag);
-        }else if (class_name != null) {
-            ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(itemID));
+        }
+        if (class_name != null) {
             try {
-                Class<?> clazz = Class.forName(class_name);
-                if (clazz.isAssignableFrom(stack.getItem().getClass())) {
-                    return true;
-                }
+                return Class.forName(class_name).isAssignableFrom(item.getClass());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Json解析错误,verifier找不到类: " + class_name,e);
             }
